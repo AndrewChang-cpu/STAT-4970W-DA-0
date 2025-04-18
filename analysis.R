@@ -1,0 +1,26 @@
+# Load necessary libraries
+library(tidyverse)
+
+# Read in the data
+df <- read.csv("C:/Users/Andrew/Desktop/Classwork/STAT 4970W/DA 0/merged_rpe_wellness.csv")
+
+# Drop non-predictive or identifier columns
+df_model <- df %>%
+  select(-Date, -PlayerID, -SessionType, -USGMeasurement, -Training
+  )
+
+# Remove rows with missing USG
+df_model <- df_model[!is.na(df_model$USG), ]
+
+df_model$Pain <- as.factor(df_model$Pain)
+df_model$Illness <- as.factor(df_model$Illness)
+df_model$Menstruation <- as.factor(df_model$Menstruation)
+
+# Optionally drop rows with any remaining NA
+df_model <- na.omit(df_model)
+
+# Run the linear regression
+model <- lm(USG ~ ., data = df_model)
+
+# Show summary of the model
+summary(model)
